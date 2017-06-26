@@ -14,22 +14,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ListingController {
 
+    @Autowired
+    private ListingRepository listingRepository;
 
-    /*@Autowired
-    private ListingRepository listingRepository;*/
-    @GetMapping("/listing")
-    public String index(Model model){
+    @GetMapping("/")
+    public String index(Model model) {
         model.addAttribute("listing", new Listing());
-        return"index";
+        Iterable<Listing> listingList = listingRepository.findAll();
+        model.addAttribute("listingList", listingList);
+        return "index";
     }
 
-    @PostMapping("/listing")
-    public String catcher(@ModelAttribute Listing listing){
-        /*listingRepository.save(listing);*/
+    @PostMapping("/")
+    public String catcher(@ModelAttribute Listing listing) {
+       /* listingRepository.save(listing);*/
         return "result";
     }
+
     @RequestMapping("/login")
     public String login() {
         return "login";
     }
+
+    @PostMapping("/addsubmit")
+    public String addSubmit(@ModelAttribute Listing listing, Model model) {
+        model.addAttribute(new Listing());
+        listingRepository.save(listing);
+        Iterable<Listing> listingList = listingRepository.findAll();
+        model.addAttribute("listingList", listingList);
+        return "index";
+    }
+
 }
